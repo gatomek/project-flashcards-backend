@@ -1,8 +1,8 @@
-package pl.gatomek.flascard.backend.projectflashcardsbackend.parser;
+package pl.gatomek.flashcard.backend.projectflashcardsbackend.parser;
 
-import pl.gatomek.flascard.backend.projectflashcardsbackend.dto.Content;
-import pl.gatomek.flascard.backend.projectflashcardsbackend.dto.Flashcard;
-import pl.gatomek.flascard.backend.projectflashcardsbackend.dto.Option;
+import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Content;
+import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Flashcard;
+import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Option;
 
 import java.util.ArrayList;
 import java.util.List;

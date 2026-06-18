@@ -1,4 +1,4 @@
-package pl.gatomek.flascard.backend.projectflashcardsbackend.dto;
+package pl.gatomek.flashcard.backend.projectflashcardsbackend.dto;
 
 import lombok.Getter;
 import lombok.Setter;

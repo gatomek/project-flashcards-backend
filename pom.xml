@@ -8,9 +8,9 @@
         <version>4.1.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>pl.gatomek.flascard.backend</groupId>
+    <groupId>pl.gatomek.flashcard.backend</groupId>
     <artifactId>project-flashcards-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>project-flashcards-backend</name>
     <description>project-flashcards-backend</description>
     <url/>

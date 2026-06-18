@@ -1,4 +1,4 @@
-package pl.gatomek.flascard.backend.projectflashcardsbackend;
+package pl.gatomek.flashcard.backend.projectflashcardsbackend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

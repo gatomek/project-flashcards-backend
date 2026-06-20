@@ -45,7 +45,7 @@
         dest: "/opt/{{app_name}}/config/"
         owner: "{{app_name}}"
         group: "{{app_name}}"
-        mode: '0700'
+        mode: '0600'
 
     - name: Copy application to app folder
       copy:
@@ -53,7 +53,7 @@
         dest: "/opt/{{app_name}}/bin/{{app_name}}.jar"
         owner: "{{app_name}}"
         group: "{{app_name}}"
-        mode: '0700'
+        mode: '0644'
 
     - name: "Render systemd service-template.service config file to /etc/systemd/system/{{app_name}}.service"
       template:

@@ -1,0 +1,14 @@
+- name: "Reload service {{app_name}} on kamatera"
+  vars_files:
+    - vars/prod.yml
+  gather_facts: no
+  hosts: kamatera
+  remote_user: "{{remote_admin}}"
+  become: true
+  become_method: sudo
+  tasks:
+    - name: "Reload service {{app_name}}"
+      systemd:
+        daemon_reload: yes
+        state: restarted
+        name: "{{app_name}}"

@@ -1,0 +1,7 @@
+app_name: "flashcards"
+remote_admin:
+user_password:
+ansible_become_pass:
+keystore_password:
+privatekey_path:
+certificate_path:

@@ -1,0 +1,14 @@
+### GET request to 127.0.0.1
+GET http://127.0.0.1:50000/decks
+
+###
+
+### GET request to localhost
+GET http://localhost:50000/decks
+
+###
+
+### GET request to kamatera (replace <host>)
+GET https://<host>:50000/decks
+
+###

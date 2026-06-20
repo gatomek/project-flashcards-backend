@@ -1,0 +1,88 @@
+- name: "Set up service {{app_name}} on kamatera"
+  vars_files:
+    - vars/prod.yml
+  gather_facts: no
+  hosts: kamatera
+  remote_user: "{{remote_admin}}"
+  become: true
+  become_method: sudo
+  tasks:
+    - name: "Creating user {{app_name}}"
+      user:
+        name: "{{app_name}}"
+        shell: /usr/sbin/nologin
+        system: yes
+        create_home: no
+        state: present
+
+    - name: "Create folder /opt/{{app_name}}/bin folder"
+      file:
+        path: "/opt/{{app_name}}/bin"
+        state: directory
+        owner: "{{app_name}}"
+        group: "{{app_name}}"
+        mode: '0700'
+
+    - name: "Create folder /opt/{{app_name}}/config folder"
+      file:
+        path: "/opt/{{app_name}}/config"
+        state: directory
+        owner: "{{app_name}}"
+        group: "{{app_name}}"
+        mode: '0700'
+
+    - name: "Create folder /opt/{{app_name}}/ssl folder"
+      file:
+        path: "/opt/{{app_name}}/ssl"
+        state: directory
+        owner: "{{app_name}}"
+        group: "{{app_name}}"
+        mode: '0700'
+
+    - name: Copy prod.env to app folder
+      copy:
+        src: ../../env/prod.env
+        dest: "/opt/{{app_name}}/config/"
+        owner: "{{app_name}}"
+        group: "{{app_name}}"
+        mode: '0600'
+
+    - name: Copy application to app folder
+      copy:
+        src: "../../target/{{app_name}}.jar"
+        dest: "/opt/{{app_name}}/bin/{{app_name}}.jar"
+        owner: "{{app_name}}"
+        group: "{{app_name}}"
+        mode: '0644'
+
+    - name: "Render systemd service-template.service config file to /etc/systemd/system/{{app_name}}.service"
+      template:
+        src: data/service-template.service
+        dest: "/etc/systemd/system/{{app_name}}.service"
+        owner: root
+        group: root
+
+    - name: Create keystore PKCS#12 file
+      community.crypto.openssl_pkcs12:
+        path: "/opt/{{app_name}}/ssl/keystore.p12"
+        privatekey_path: "{{privatekey_path}}"
+        certificate_path: "{{certificate_path}}"
+        friendly_name: "{{app_name}}"
+        passphrase: "{{keystore_password}}"
+
+    - name: Setting owner and group of keystore PKCS#12 file
+      file:
+        path: "/opt/{{app_name}}/ssl/keystore.p12"
+        owner: "{{app_name}}"
+        group: "{{app_name}}"
+        mode: '0600'
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: "Start service {{app_name}}"
+      systemd:
+        state: started
+        name: "{{app_name}}"
+        enabled: true

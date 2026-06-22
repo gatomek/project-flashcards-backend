@@ -1,11 +1,14 @@
 package pl.gatomek.flashcard.backend.projectflashcardsbackend.repo;
 
+import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.PagedIterable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Content;
+import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Flashcard;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.FlashcardDeck;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.parser.FlashcardParser;
 
@@ -17,24 +20,20 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Logger;
 
-
-@Profile("!fhrepo")
+@Slf4j
+@Profile("!fsrepo")
 @Repository
 class GitHubFlashcardRepository implements FlashcardRepo {
-    private static final Logger LOGGER = Logger.getLogger(GitHubFlashcardRepository.class.getName());
-
     private static final FlashcardParser PARSER = new FlashcardParser();
-
     private final ReadWriteLock lock = new ReentrantReadWriteLock(true);
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
-
     private List<FlashcardDeck> cachedDecks;
     private Instant timestamp;
 
@@ -64,7 +63,7 @@ class GitHubFlashcardRepository implements FlashcardRepo {
 
             flashcardDecks = new ArrayList<>(100);
 
-            LOGGER.info("GitHub data reloading");
+            log.info("GitHub data reloading");
 
             GitHub gitHub = GitHub.connectAnonymously();
             GHRepository repository = gitHub.getRepository("gatomek/project-flashcard-data");
@@ -74,25 +73,64 @@ class GitHubFlashcardRepository implements FlashcardRepo {
                     FlashcardDeck flashcardDeck = new FlashcardDeck(c.getName());
                     PagedIterable<GHContent> cards = c.listDirectoryContent();
                     for (var card : cards) {
-                        try (InputStream inputStream = card.read();
-                             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-                             BufferedReader reader = new BufferedReader(inputStreamReader)) {
-                            List<String> lines = reader.lines().toList();
-                            flashcardDeck.add(PARSER.parse(card.getName(), lines));
+                        if (card.isFile()) {
+                            try (InputStream inputStream = card.read();
+                                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                                 BufferedReader reader = new BufferedReader(inputStreamReader)) {
+                                List<String> lines = reader.lines().toList();
+                                flashcardDeck.add(PARSER.parse(card.getName(), lines));
+                            }
+                        } else if (card.isDirectory()) {
+                            PagedIterable<GHContent> ghContents = card.listDirectoryContent();
+                            if (ghContents != null) {
+                                Flashcard parsed = null;
+
+                                for (GHContent cx : ghContents) {
+                                    if (cx.isFile() && cx.getName().endsWith(".md")) {
+                                        try (InputStream inputStream = cx.read();
+                                             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                                             BufferedReader reader = new BufferedReader(inputStreamReader)) {
+                                            List<String> lines = reader.lines().toList();
+                                            parsed = PARSER.parse(card.getName(), lines);
+                                        }
+                                        break;
+                                    }
+                                }
+
+                                if (parsed != null) {
+                                    Content query = parsed.getQuery();
+                                    if (query != null) {
+                                        for (GHContent cx : ghContents) {
+                                            if (cx.isFile() && cx.getName().endsWith(".jpg")) {
+                                                try (InputStream inputStream = cx.read()) {
+                                                    byte[] fileContent = inputStream.readAllBytes();
+                                                    String base64 = Base64.getEncoder().encodeToString(fileContent);
+                                                    query.setImg("data:image/jpg;base64," + base64);
+                                                }
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if( parsed != null) {
+                                    flashcardDeck.add(parsed);
+                                }
+                            }
                         }
                     }
                     flashcardDecks.add(flashcardDeck);
                 }
             }
 
-            LOGGER.info("GitHub data reloaded");
+            log.info("GitHub data reloaded");
 
             cachedDecks = flashcardDecks;
             timestamp = Instant.now();
 
             return fromCache();
         } catch (IOException ex) {
-            LOGGER.severe(ex.getMessage());
+            log.error("IO Exception: {}", ex.getMessage());
             return null;
         } finally {
             writeLock.unlock();

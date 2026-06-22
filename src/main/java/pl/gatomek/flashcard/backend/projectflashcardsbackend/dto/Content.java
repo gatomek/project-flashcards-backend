@@ -12,4 +12,5 @@ import java.util.List;
 public class Content {
     private final String main;
     private final List<Option> options;
+    private String img;
 }

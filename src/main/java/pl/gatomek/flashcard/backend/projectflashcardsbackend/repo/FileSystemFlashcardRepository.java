@@ -2,7 +2,6 @@ package pl.gatomek.flashcard.backend.projectflashcardsbackend.repo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.config.FileSystemRepoConfiguration;
@@ -67,7 +66,7 @@ public class FileSystemFlashcardRepository implements FlashcardRepo {
                                                 File[] jpgs = fc.listFiles(jpgFilter);
                                                 if (jpgs != null && jpgs.length > 0) {
                                                     File jpg = jpgs[0];
-                                                    byte[] fileContent = FileUtils.readFileToByteArray(jpg);
+                                                    byte[] fileContent = Files.readAllBytes(jpg.toPath());
                                                     String base64 = Base64.getEncoder().encodeToString(fileContent);
                                                     query.setImg("data:image/jpg;base64," + base64);
                                                 }

@@ -4,7 +4,7 @@ After=syslog.target
 
 [Service]
 User={{app_name}}
-ExecStart=/usr/bin/java -jar /opt/{{app_name}}/bin/{{app_name}}.jar --spring.profiles.active=kamatera
+ExecStart=/usr/bin/java -jar /opt/{{app_name}}/bin/{{app_name}}.jar --spring.profiles.active=kamatera,ghrepo
 WorkingDirectory=/opt/{{app_name}}/
 StandardOutput=journal
 StandardError=journal

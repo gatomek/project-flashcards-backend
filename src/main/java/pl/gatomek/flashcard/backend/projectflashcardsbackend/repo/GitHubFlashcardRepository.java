@@ -4,6 +4,7 @@ import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.PagedIterable;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.FlashcardDeck;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.parser.FlashcardParser;
@@ -23,6 +24,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 
+@Profile("ghrepo")
 @Repository
 class GitHubFlashcardRepository implements FlashcardRepo {
     private static final Logger LOGGER = Logger.getLogger(GitHubFlashcardRepository.class.getName());

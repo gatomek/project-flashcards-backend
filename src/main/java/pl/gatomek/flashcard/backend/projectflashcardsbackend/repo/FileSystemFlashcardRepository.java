@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Profile("fsrepo")
@@ -19,8 +20,8 @@ import java.util.logging.Logger;
 @Repository
 public class FileSystemFlashcardRepository implements FlashcardRepo {
     private static final Logger LOGGER = Logger.getLogger(FileSystemFlashcardRepository.class.getName());
-    private final FileSystemRepoConfiguration fileSystemRepoConfiguration;
     private static final FlashcardParser PARSER = new FlashcardParser();
+    private final FileSystemRepoConfiguration fileSystemRepoConfiguration;
 
     @Override
     public List<FlashcardDeck> getDecks() {
@@ -39,10 +40,11 @@ public class FileSystemFlashcardRepository implements FlashcardRepo {
                         if (cards != null) {
                             for (File fc : cards) {
                                 try {
-                                    List<String> lines = Files.readAllLines(fc.toPath());
+                                    List<String> lines =
+                                            Files.readAllLines(fc.toPath(), java.nio.charset.StandardCharsets.UTF_8);
                                     deck.add(PARSER.parse(fc.getName(), lines));
                                 } catch (IOException ex) {
-                                    LOGGER.severe(ex.getMessage());
+                                    LOGGER.log(Level.SEVERE, "Failed to read flashcard file: {}", fc.getAbsolutePath());
                                 }
                             }
                         }

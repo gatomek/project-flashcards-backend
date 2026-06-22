@@ -24,7 +24,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 
-@Profile("ghrepo")
+@Profile("!fhrepo")
 @Repository
 class GitHubFlashcardRepository implements FlashcardRepo {
     private static final Logger LOGGER = Logger.getLogger(GitHubFlashcardRepository.class.getName());

@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Slf4j
-@Profile("!fsrepo")
+@Profile("!fsrepo & !pages")
 @Repository
 class GitHubFlashcardRepository implements FlashcardRepo {
     private static final FlashcardParser PARSER = new FlashcardParser();

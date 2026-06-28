@@ -16,6 +16,11 @@ public class FlashcardDeck {
         setTitle(title);
     }
 
+    public FlashcardDeck(String title, List<Flashcard> cards) {
+        this.title = title;
+        this.cards = cards;
+    }
+
     public void add(Flashcard card) {
         cards.add(card);
     }

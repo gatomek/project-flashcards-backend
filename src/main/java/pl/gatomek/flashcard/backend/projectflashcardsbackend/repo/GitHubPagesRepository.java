@@ -9,7 +9,10 @@ import pl.gatomek.flashcard.backend.projectflashcardsbackend.feign.Content;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.feign.GitHubPagesClient;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.parser.FlashcardParser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Profile("pages")
@@ -46,12 +49,11 @@ public class GitHubPagesRepository implements FlashcardRepo {
         Optional<String> mdFile = findFile(card, ".md");
         if (mdFile.isPresent()) {
             String content = gitHubPagesClient.getFlashcardFromFolder(title, card.getName(), mdFile.get());
-            String[] lines = content.split("\n");
-
-            Flashcard parsed = PARSER.parse(card.getName(), Arrays.stream(lines).toList());
+            List<String> lines = content.lines().toList();
+            Flashcard parsed = PARSER.parse(card.getName(), lines);
 
             Optional<String> jpgFile = findFile(card, ".jpg");
-            if( jpgFile.isPresent()) {
+            if (jpgFile.isPresent()) {
                 byte[] img = gitHubPagesClient.getImageFromFolder(title, card.getName(), jpgFile.get());
                 String base64 = Base64.getEncoder().encodeToString(img);
                 parsed.getQuery().setImg("data:image/jpg;base64," + base64);
@@ -66,14 +68,14 @@ public class GitHubPagesRepository implements FlashcardRepo {
     private Optional<String> findFile(Content card, String endsWithFilter) {
         return card.getContent().stream()
                 .map(Content::getName)
-                .filter( c -> c.endsWith(endsWithFilter))
+                .filter(c -> c.endsWith(endsWithFilter))
                 .findFirst();
     }
 
     private Optional<Flashcard> loadFlashcardContentFromFile(String title, Content card) {
         String content = gitHubPagesClient.getFlashcardFromFile(title, card.getName());
-        String[] lines = content.split("\n");
-        Flashcard parsed = PARSER.parse(card.getName(), Arrays.stream(lines).toList());
+        List<String> lines = content.lines().toList();
+        Flashcard parsed = PARSER.parse(card.getName(), lines);
         return Optional.of(parsed);
     }
 }

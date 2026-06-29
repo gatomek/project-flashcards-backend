@@ -66,7 +66,7 @@ class GitHubFlashcardRepository implements FlashcardRepo {
             log.info("GitHub data reloading");
 
             GitHub gitHub = GitHub.connectAnonymously();
-            GHRepository repository = gitHub.getRepository("gatomek/project-flashcard-data");
+            GHRepository repository = gitHub.getRepository("gatomek/project-flashcards-data");
             if (repository != null) {
                 List<GHContent> decks = repository.getDirectoryContent("decks", "main");
                 for (GHContent c : decks) {

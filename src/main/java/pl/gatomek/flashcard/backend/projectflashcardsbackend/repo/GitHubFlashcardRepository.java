@@ -7,7 +7,6 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.PagedIterable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
-import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Content;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Flashcard;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.FlashcardDeck;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.parser.FlashcardParser;
@@ -98,17 +97,14 @@ class GitHubFlashcardRepository implements FlashcardRepo {
                                 }
 
                                 if (parsed != null) {
-                                    Content query = parsed.getQuery();
-                                    if (query != null) {
-                                        for (GHContent cx : ghContents) {
-                                            if (cx.isFile() && cx.getName().endsWith(".jpg")) {
-                                                try (InputStream inputStream = cx.read()) {
-                                                    byte[] fileContent = inputStream.readAllBytes();
-                                                    String base64 = Base64.getEncoder().encodeToString(fileContent);
-                                                    query.setImg("data:image/jpg;base64," + base64);
-                                                }
-                                                break;
+                                    for (GHContent cx : ghContents) {
+                                        if (cx.isFile() && cx.getName().endsWith(".jpg")) {
+                                            try (InputStream inputStream = cx.read()) {
+                                                byte[] fileContent = inputStream.readAllBytes();
+                                                String base64 = Base64.getEncoder().encodeToString(fileContent);
+                                                parsed.setImg("data:image/jpg;base64," + base64);
                                             }
+                                            break;
                                         }
                                     }
                                 }

@@ -56,7 +56,7 @@ public class GitHubPagesRepository implements FlashcardRepo {
             if (jpgFile.isPresent()) {
                 byte[] img = gitHubPagesClient.getImageFromFolder(title, card.getName(), jpgFile.get());
                 String base64 = Base64.getEncoder().encodeToString(img);
-                parsed.getQuery().setImg("data:image/jpg;base64," + base64);
+                parsed.setImg("data:image/jpg;base64," + base64);
             }
 
             return Optional.of(parsed);

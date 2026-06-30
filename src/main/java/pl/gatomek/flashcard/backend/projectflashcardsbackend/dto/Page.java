@@ -9,8 +9,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class Content {
+public class Page {
     private final String main;
     private final List<Option> options;
-    private String img;
 }

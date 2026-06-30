@@ -9,8 +9,9 @@ public class Flashcard {
     private String name;
     private String type;
     private String uuid;
-    private Content query;
-    private Content answer;
+    private String img;
+    private Page query;
+    private Page answer;
 
     public Flashcard(String name) {
         setName(name);

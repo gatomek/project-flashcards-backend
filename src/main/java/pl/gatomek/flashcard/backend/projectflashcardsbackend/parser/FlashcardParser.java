@@ -1,6 +1,6 @@
 package pl.gatomek.flashcard.backend.projectflashcardsbackend.parser;
 
-import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Content;
+import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Page;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Flashcard;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Option;
 
@@ -107,7 +107,7 @@ public class FlashcardParser {
             for (String s : content) {
                 sj.add(s);
             }
-            card.setQuery(new Content(sj.toString(), options));
+            card.setQuery(new Page(sj.toString(), options));
         }
 
         if (!answer.isEmpty()) {
@@ -119,7 +119,7 @@ public class FlashcardParser {
             for (String s : content) {
                 sj.add(s);
             }
-            card.setAnswer(new Content(sj.toString(), options));
+            card.setAnswer(new Page(sj.toString(), options));
         }
 
         return card;

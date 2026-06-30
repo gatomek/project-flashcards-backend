@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.config.FileSystemRepoConfiguration;
-import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Content;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Flashcard;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.FlashcardDeck;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.parser.FlashcardParser;
@@ -57,19 +56,15 @@ public class FileSystemFlashcardRepository implements FlashcardRepo {
                                             File md = mds[0];
                                             List<String> lines = Files.readAllLines(md.toPath(), StandardCharsets.UTF_8);
                                             parsed = PARSER.parse(fc.getName(), lines);
-
                                         }
 
                                         if (parsed != null) {
-                                            Content query = parsed.getQuery();
-                                            if (query != null) {
-                                                File[] jpgs = fc.listFiles(jpgFilter);
-                                                if (jpgs != null && jpgs.length > 0) {
-                                                    File jpg = jpgs[0];
-                                                    byte[] fileContent = Files.readAllBytes(jpg.toPath());
-                                                    String base64 = Base64.getEncoder().encodeToString(fileContent);
-                                                    query.setImg("data:image/jpg;base64," + base64);
-                                                }
+                                            File[] jpgs = fc.listFiles(jpgFilter);
+                                            if (jpgs != null && jpgs.length > 0) {
+                                                File jpg = jpgs[0];
+                                                byte[] fileContent = Files.readAllBytes(jpg.toPath());
+                                                String base64 = Base64.getEncoder().encodeToString(fileContent);
+                                                parsed.setImg("data:image/jpg;base64," + base64);
                                             }
                                         }
 

@@ -2,8 +2,6 @@ package pl.gatomek.flashcard.backend.projectflashcardsbackend.repo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Repository;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.config.FileSystemRepoConfiguration;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Flashcard;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.FlashcardDeck;
@@ -19,9 +17,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Slf4j
-@Profile("fsrepo")
 @RequiredArgsConstructor
-@Repository
 public class FileSystemFlashcardRepository implements FlashcardRepo {
     private static final FlashcardParser PARSER = new FlashcardParser();
     private final FileSystemRepoConfiguration fileSystemRepoConfiguration;

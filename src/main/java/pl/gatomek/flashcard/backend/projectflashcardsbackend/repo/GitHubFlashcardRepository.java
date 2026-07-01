@@ -5,8 +5,6 @@ import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.PagedIterable;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Repository;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Flashcard;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.FlashcardDeck;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.parser.FlashcardParser;
@@ -26,9 +24,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Slf4j
-@Profile("!fsrepo & !pages")
-@Repository
-class GitHubFlashcardRepository implements FlashcardRepo {
+public class GitHubFlashcardRepository implements FlashcardRepo {
     private static final FlashcardParser PARSER = new FlashcardParser();
     private final ReadWriteLock lock = new ReentrantReadWriteLock(true);
     private final Lock readLock = lock.readLock();
@@ -109,7 +105,7 @@ class GitHubFlashcardRepository implements FlashcardRepo {
                                     }
                                 }
 
-                                if( parsed != null) {
+                                if (parsed != null) {
                                     flashcardDeck.add(parsed);
                                 }
                             }

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Flashcard {
-    private String name;
+    private final String name;
     private String type;
     private String uuid;
     private String img;
@@ -14,7 +14,7 @@ public class Flashcard {
     private Page answer;
 
     public Flashcard(String name) {
-        setName(name);
+        this.name = name;
     }
 }
 

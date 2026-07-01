@@ -1,14 +1,17 @@
 package pl.gatomek.flashcard.backend.projectflashcardsbackend.parser;
 
-import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Page;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Flashcard;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Option;
+import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Page;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
 public class FlashcardParser {
+
+    private static final String SEPARATOR = "---";
+
     public Flashcard parse(String flashcardName, List<String> lines) {
         Flashcard card = new Flashcard(flashcardName);
 
@@ -20,13 +23,13 @@ public class FlashcardParser {
 
         int c = 0;
         for (String line : lines) {
-            if (line.equals("---") && c == 0) {
+            if (SEPARATOR.equals(line) && c == 0) {
                 isProp = true;
                 c++;
                 continue;
             }
 
-            if (line.equals("---") && isProp) {
+            if (SEPARATOR.equals(line) && isProp) {
                 isProp = false;
                 c++;
                 continue;
@@ -99,59 +102,45 @@ public class FlashcardParser {
         }
 
         if (!query.isEmpty()) {
-            List<String> content = new ArrayList<>();
-            List<Option> options = new ArrayList<>();
-            scanQuery(query, content, options);
-
-            StringJoiner sj = new StringJoiner("\n");
-            for (String s : content) {
-                sj.add(s);
-            }
-            card.setQuery(new Page(sj.toString(), options));
+            card.setQuery(scan(query));
         }
 
         if (!answer.isEmpty()) {
-            List<String> content = new ArrayList<>();
-            List<Option> options = new ArrayList<>();
-            scanQuery(answer, content, options);
-
-            StringJoiner sj = new StringJoiner("\n");
-            for (String s : content) {
-                sj.add(s);
-            }
-            card.setAnswer(new Page(sj.toString(), options));
+            card.setAnswer(scan(answer));
         }
 
         return card;
     }
 
-    private void scanQuery(List<String> query, List<String> content, List<Option> options) {
+    private Page scan(List<String> lines) {
+        List<Option> options = new ArrayList<>(10);
+        List<String> contents = new ArrayList<>(10);
 
-        Option option = null;
+        ParserOption parserOption = null;
 
-        for (String line : query) {
-
-            if (line.startsWith("##")) {
-                if (option != null) {
-                    options.add(option);
+        for (String line : lines) {
+            if (line.startsWith("## ")) {
+                if (parserOption != null) {
+                    options.add(parserOption.toOption());
                 }
 
-                option = new Option(line.substring(3));
+                parserOption = new ParserOption(line.substring(3));
                 continue;
             }
 
-            if (option != null) {
-                if (!line.isEmpty()) {
-                    option.getContent().add(line);
-                }
+            if (parserOption != null) {
+                parserOption.getContents().add(line);
                 continue;
             }
 
-            content.add(line);
+            contents.add(line);
         }
 
-        if (option != null) {
-            options.add(option);
+        if (parserOption != null) {
+            options.add(parserOption.toOption());
         }
+
+        String content = String.join( "\n", contents);
+        return new Page(content, options);
     }
 }

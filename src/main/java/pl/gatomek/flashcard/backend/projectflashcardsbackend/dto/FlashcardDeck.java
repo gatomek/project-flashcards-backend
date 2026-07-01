@@ -9,11 +9,11 @@ import java.util.List;
 @Getter
 @Setter
 public class FlashcardDeck {
-    private String title;
+    private final String title;
     private List<Flashcard> cards = new ArrayList<>();
 
     public FlashcardDeck(String title) {
-        setTitle(title);
+        this.title = title;
     }
 
     public FlashcardDeck(String title, List<Flashcard> cards) {

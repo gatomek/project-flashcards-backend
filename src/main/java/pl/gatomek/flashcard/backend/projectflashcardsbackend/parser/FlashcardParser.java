@@ -152,7 +152,7 @@ public class FlashcardParser {
         return new Page(content, options);
     }
 
-    enum SectionEnum {
+    private enum SectionEnum {
         NONE,
         PROPS,
         QUERY,

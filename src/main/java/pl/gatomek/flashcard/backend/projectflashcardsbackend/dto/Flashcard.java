@@ -12,6 +12,7 @@ public class Flashcard {
     private String img;
     private Page query;
     private Page answer;
+    private String info;
 
     public Flashcard(String name) {
         this.name = name;

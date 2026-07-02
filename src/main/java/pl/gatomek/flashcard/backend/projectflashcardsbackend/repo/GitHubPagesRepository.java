@@ -1,8 +1,6 @@
 package pl.gatomek.flashcard.backend.projectflashcardsbackend.repo;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Repository;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.Flashcard;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.dto.FlashcardDeck;
 import pl.gatomek.flashcard.backend.projectflashcardsbackend.feign.Content;
@@ -15,8 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Profile("pages")
-@Repository
 public class GitHubPagesRepository implements FlashcardRepo {
 
     private static final FlashcardParser PARSER = new FlashcardParser();

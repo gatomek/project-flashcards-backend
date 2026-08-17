@@ -1,4 +1,4 @@
-- name: "Set up service {{app_name}} on kamatera"
+- name: "Update SSL data for {{app_name}}"
   vars_files:
     - vars/prod.yml
   gather_facts: no

@@ -13,9 +13,9 @@
 ## File system layout
 - 📂 /opt
   - 📂 /flashcards
-    - 📂 /bin 
+    - 📂 /bin
       - 📄 flashcards.jar
-    - 📂 /config 
+    - 📂 /config
       - 📄 prod.env
     - 📂 /ssl
       - 📄 keystore.p12

@@ -1,0 +1,7 @@
+services:
+  flashcards-update-ssl:
+    container_name: ansible_flashcards_update_ssl
+    build:
+      context: .
+      dockerfile: ansible.Dockerfile
+    command: ansible-playbook -i inventory.ini playbooks/update-ssl.yml

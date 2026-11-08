@@ -1,3 +1,3 @@
 #!/bin/bash
 
-systemctl restart flashcards.service
+systemctl restart {{app_name}}.service

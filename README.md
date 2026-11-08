@@ -25,10 +25,13 @@
   - 📂 /systemd
     - 📂/system
       - 📄 flashcards.service
+      - 📄 devops-flashcards-restarter.timer
+      - 📄 devops-flashcards-restarter.service
 
 ## Timers HowTo
 
 ```
 systemctl list-timers
 systemctl list-timers devops-flashcards-restarter
+sudo systemctl enable --now devops-flashcards-restarter.timer
 ```

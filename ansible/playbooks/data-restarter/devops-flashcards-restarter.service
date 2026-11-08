@@ -6,7 +6,7 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-User={{ app_name }}
+User=root
 WorkingDirectory=/opt/{{ app_name }}
 ExecStart=/bin/bash /opt/{{ app_name }}/scripts/restarter.sh
 TimeoutStartSec=600

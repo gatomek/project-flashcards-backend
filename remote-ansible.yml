@@ -12,7 +12,7 @@ services:
       dockerfile: ansible.Dockerfile
     command: ansible-playbook -i inventory.ini playbooks/update-ssl.yml
   flashcards-restarter:
-    container_name: ansible_grafana_restarter
+    container_name: ansible_flashcards_restarter
     build:
       context: .
       dockerfile: ansible.Dockerfile

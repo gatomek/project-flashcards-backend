@@ -1,0 +1,48 @@
+- name: "Setup Flashcards Restarter"
+  vars_files:
+    - vars/prod.yml
+  gather_facts: no
+  hosts: castle
+  remote_user: "{{remote_admin}}"
+  become: true
+  become_method: sudo
+  tasks:
+    - name: "Create scripts folder /opt/{{ app_name }}/scripts"
+      file:
+        path: "/opt/{{ app_name }}/scripts"
+        state: directory
+        owner: "{{ app_name }}"
+        group: "{{ app_name }}"
+        mode: '0700'
+
+    - name: "Copy local script file restarter.sh to /opt/{{ app_name }}/scripts/"
+      template:
+        src: data-restarter/restarter.sh
+        dest: "/opt/{{ app_name }}/scripts/restarter.sh"
+        owner: "{{ app_name }}"
+        group: "{{ app_name }}"
+        mode: '0500'
+
+    - name: Copy systemd devops-flashcards-restarter.service file to /etc/systemd/system/
+      template:
+        src: data-restarter/devops-flashcards-restarter.service
+        dest: /etc/systemd/system/
+        owner: root
+        group: root
+
+    - name: Copy systemd devops-flashcards-restarter.timer file to /etc/systemd/system/
+      copy:
+        src: data-restarter/devops-flashcards-restarter.timer
+        dest: /etc/systemd/system/
+        owner: root
+        group: root
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Start timer
+      systemd:
+        name: devops-flashcards-restarter.timer
+        state: started
+        enabled: true

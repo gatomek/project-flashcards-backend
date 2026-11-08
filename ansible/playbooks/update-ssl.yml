@@ -2,7 +2,7 @@
   vars_files:
     - vars/prod.yml
   gather_facts: no
-  hosts: kamatera
+  hosts: castle
   remote_user: "{{remote_admin}}"
   become: true
   become_method: sudo

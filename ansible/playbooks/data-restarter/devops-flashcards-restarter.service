@@ -1,0 +1,16 @@
+[Unit]
+Description=Devops Flashcards Restarter (once a day at midnight)
+Documentation=man:systemd.service(5)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User={{ app_name }}
+WorkingDirectory=/opt/{{ app_name }}
+ExecStart=/bin/bash /opt/{{ app_name }}/scripts/restarter.sh
+TimeoutStartSec=600
+PrivateTmp=yes
+ProtectSystem=full
+ReadWritePaths=/opt/{{ app_name }}
+NoNewPrivileges=yes

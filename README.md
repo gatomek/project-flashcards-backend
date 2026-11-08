@@ -19,7 +19,16 @@
       - 📄 prod.env
     - 📂 /ssl
       - 📄 keystore.p12
+    - 📂 /scripts
+      - 📄 restarter.sh
 - 📂 /etc
   - 📂 /systemd
     - 📂/system
       - 📄 flashcards.service
+
+## Timers HowTo
+
+```
+systemctl list-timers
+systemctl list-timers devops-flashcards-restarter
+```
